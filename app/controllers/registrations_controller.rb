@@ -1,5 +1,7 @@
 class RegistrationsController < ApplicationController
   def new
+    redirect_to root_path, notice: 'You are already signed in' if Current.user
+
     @user = User.new
   end
 
@@ -7,7 +9,8 @@ class RegistrationsController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      redirect_to root_path, notice: "Successfully created account"
+      session[:user_id] = @user.id
+      redirect_to root_path, notice: 'Successfully created account'
     else
       render :new
     end
